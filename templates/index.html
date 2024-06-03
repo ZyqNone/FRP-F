@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FRP拉挤型材弯曲性能预测</title>
+  <!-- 引入本地Bootstrap CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
+    <!-- 自定义样式 -->
+    <style>
+        h2 {
+          color: darkgray; /* 更改为深灰色 */
+          font-size: 1.5rem; /* 更改为1.5rem */
+        }
+        .form-control::placeholder {
+          color: #ccc; /* 更改为浅灰色 */
+        }
+        .alert-warning {
+          background-color: purple; /* 设置背景色为紫色 */
+          color: white; /* 设置文本颜色为白色 */
+        }
+        .btn-primary {
+          background-color: purple; /* 将背景色更改为紫色 */
+          color: white; /* 保持文本颜色为白色 */
+        }
+        .table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        .table th,
+        .table td {
+          border: 1px solid #ddd; /* 添加纵向分割线 */
+          text-align: center; /* 选项：根据需要设置文本对齐方式 */
+          width: calc(100% / 11); /* 假设有9列，每列宽度相等 */
+        }
+        .table th {
+          background-color: #f0f0f0; /* 表头背景色 */
+        }
+      </style>
+
+</head>
+
+<body>
+  <div class="container">
+    <!-- 标题前空行 -->
+    <p class="mb-5"></p>
+    <!-- 居中的标题 -->
+    <h1 class="text-center">FRP拉挤型材弯曲性能预测</h1>
+    <!-- 标题后空行 -->
+    <p class="mt-4"></p>
+
+    <!-- 警示框 -->
+    <div class="alert alert-warning" role="alert">
+      请按照相关要求填写输入参数，以保证输出结果准确。
+    </div>
+
+    <!-- 表单开始 -->
+    <form method="POST" action="/">
+      <!-- 二级标题 -->
+      <h2>材料性质</h2>
+      <!-- 标题后空行 -->
+      <p class="mt-1"></p> 
+
+      <div class="form-row">
+        <!-- 1.1列输入框 -->
+        <div class="form-group col-md-6">
+          <label for="Ex">纵向弹性模量Ex（GPa）</label>
+          <input type="number" class="form-control" id="Ex" name="Ex" placeholder="建议：10～60" step="any" min="0.00" max="100.00">
+        </div>
+        <!-- 1.2列输入框 -->
+        <div class="form-group col-md-6">
+          <label for="Ey">横向弹性模量Ey（GPa）</label>
+          <input type="number" class="form-control" id="Ey" name="Ey" placeholder="建议：0～30" step="any" min="0.00" max="100.00">
+        </div>        
+        <!-- 2.1列输入框 -->
+        <div class="form-group col-md-6">
+          <label for="G">面内剪切模量G（GPa）</label>
+          <input type="number" class="form-control" id="G" name="G" placeholder="建议：0～20" step="any" min="0.00" max="100.00">
+        </div>
+        <!-- 2.2列输入框 -->
+        <div class="form-group col-md-6">
+          <label for="Ft">抗拉强度Ft（MPa）</label>
+          <input type="number" class="form-control" id="Ft" name="Ft" placeholder="建议：100～900" step="any" min="0.00" max="1000.00">
+        </div>
+      </div>
+
+      <p class="mb-3"></p>
+      <!-- 二级标题 -->
+      <h2>构件尺寸</h2>
+      <!-- 标题后空行 -->
+      <p class="mt-1"></p>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="type">截面类型</label>
+          <select class="form-control" id="type" name="type">
+            <option>箱型</option>
+            <option>槽型</option>
+            <option>工字型</option>
+          </select>        
+        </div> 
+
+        <div class="form-group col-md-6">
+          <label for="L">构件长度L（mm）</label>
+          <input type="number" class="form-control" id="L" name="L" placeholder="建议：0～5000" step="any" min="0.00" max="10000.00">
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="tw">腹板厚度/壁厚度tw（mm）</label>
+          <input type="number" class="form-control" id="tw" name="tw" placeholder="建议：0～20" step="any" min="0.00" max="100.00">
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="h">腹板高度/管径h（mm）</label>
+          <input type="number" class="form-control" id="h" name="h" placeholder="建议：0～500" step="any" min="0.00" max="1000.00">
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="tf">翼缘厚度/壁厚度tf（mm）</label>
+          <input type="number" class="form-control" id="tf"  name="tf" placeholder="建议：0～20" step="any" min="0.00" max="100.00">
+        </div>
+
+        <div class="form-group col-md-6">
+          <label for="b">翼缘宽度/管径b（mm）</label>
+          <input type="number" class="form-control" id="b"  name="b" placeholder="建议：0～500" step="any" min="0.00" max="1000.00">
+        </div>        
+      </div> 
+
+      <p class="mb-3"></p>
+      <!-- 二级标题 -->
+      <h2>加载方式</h2>
+      <!-- 标题后空行 -->
+      <p class="mt-1"></p> 
+      
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="method">加载方式</label>
+          <select class="form-control" id="method" name="method">
+            <option>三点弯曲</option>
+            <option>四点弯曲</option>
+          </select>        
+        </div> 
+      </div>       
+
+      <p class="mt-2"></p>      
+      <!-- 提交按钮 -->
+      <button type="submit" class="btn btn-primary float-right">提交</button>
+    </form>
+
+    <!-- 表单下空行 -->
+    <p class="mt-5"></p>
+    <h2>输入内容</h2>  <!-- 表格标题 -->
+    <table class="table">  <!-- 开始表格标签，并使用Bootstrap的类名“table”来样式化 -->
+        <thead>  <!-- 表格头部开始 -->
+          <tr>
+            <th>Ex/GPa</th>
+            <th>Ey/GPa</th>            
+            <th>G/GPa</th>
+            <th>Ft/MPa</th>
+            <th>截面形式</th>
+            <th>L/mm</th>
+            <th>tw/mm</th>
+            <th>h/mm</th>
+            <th>tf/mm</th>
+            <th>b/mm</th>
+            <th>加载方式</th>            
+          </tr>
+        </thead>  <!-- 表格头部结束 -->
+        <tbody>  <!-- 表格主体开始 -->
+          <tr>  <!-- 表格的一行 -->
+            {% for item in data %}
+            <td>{{ item }}</td>
+            {% endfor %}
+          </tr>
+        </tbody>  <!-- 表格主体结束 -->
+    </table>  <!-- 结束表格标签 -->
+
+    <!-- 表单下空行 -->
+    <p class="mt-5"></p>
+    <h2>预测结果</h2>
+    <p class="mt-2"></p>  
+
+    <div class="container">     
+      <p>极限弯矩: <span id="parameter1">{{ prediction1 }}</span></p>
+      <p>破坏模式: <span id="parameter2">{{ prediction2 }}</span></p>
+    </div>    
+
+    <!-- 表单下空行 -->
+    <p class="mt-5"></p>
+  </div>
+
+  <!-- 引入本地jQuery、Popper.js和Bootstrap JS -->
+  <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
+
+</html>
